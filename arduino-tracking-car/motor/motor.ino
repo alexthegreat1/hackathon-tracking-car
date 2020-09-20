@@ -1,22 +1,22 @@
 //L293D
 //enable 
-const int enableA = 10;
-const int enableB = 11;
-const int enableC = 12;
-const int enableD = 13;
+const int enableFrontLeft = 10;
+const int enableFrontRight = 11;
+const int enableBackLeft = 12;
+const int enableBackRight = 13;
 
 //Motor A
-const int motorPin1  = 22;  // Pin 14 of L293
-const int motorPin2  = 23;  // Pin 10 of L293
+const int frontLeftForward  = 22;  // Pin 14 of L293
+const int frontLeftBackward  = 23;  // Pin 10 of L293
 //Motor B
-const int motorPin3  = 24; // Pin  7 of L293
-const int motorPin4  = 25;  // Pin  2 of L293
+const int frontRightForward  = 24; // Pin  7 of L293
+const int frontRightBackward  = 25;  // Pin  2 of L293
 //Motor C
-const int motorPin5 = 26;
-const int motorPin6 = 27;
+const int backLeftForward = 26;
+const int backLeftBackward = 27;
 //Motor D
-const int motorPin7 = 28;
-const int motorPin8 = 29;
+const int backRightForward = 28;
+const int backRightBackward = 29;
 
 //This will run only one time.
 void setup(){
@@ -24,120 +24,120 @@ void setup(){
     Serial.begin(9600);
     
     //Set pins as outputs
-    pinMode(enableA, OUTPUT);
-    pinMode(enableB, OUTPUT);
-    pinMode(enableC, OUTPUT);
-    pinMode(enableD, OUTPUT);
-    pinMode(motorPin1, OUTPUT);
-    pinMode(motorPin2, OUTPUT);
-    pinMode(motorPin3, OUTPUT);
-    pinMode(motorPin4, OUTPUT);
-    pinMode(motorPin5, OUTPUT);
-    pinMode(motorPin6, OUTPUT);
-    pinMode(motorPin7, OUTPUT);
-    pinMode(motorPin8, OUTPUT);
+    pinMode(enableFrontLeft, OUTPUT);
+    pinMode(enableFrontRight, OUTPUT);
+    pinMode(enableBackLeft, OUTPUT);
+    pinMode(enableBackRight, OUTPUT);
+    pinMode(frontLeftForward, OUTPUT);
+    pinMode(frontLeftBackward, OUTPUT);
+    pinMode(frontRightForward, OUTPUT);
+    pinMode(frontRightBackward, OUTPUT);
+    pinMode(backLeftForward, OUTPUT);
+    pinMode(backLeftBackward, OUTPUT);
+    pinMode(backRightForward, OUTPUT);
+    pinMode(backRightBackward, OUTPUT);
     
     //enable
 //this should change the speeds of the wheels
 //note: setting a speed of 200 on 1 wheel may not be the same as 200 on another wheel
-    analogWrite(enableA, 255);
-    analogWrite(enableB, 255);
-    analogWrite(enableC, 255);
-    analogWrite(enableD, 255);
+    analogWrite(enableFrontLeft, 255);
+    analogWrite(enableFrontRight, 255);
+    analogWrite(enableBackLeft, 255);
+    analogWrite(enableBackRight, 255);
   
-    //Motor Control - Motor A: motorPin1,motorpin2 & Motor B: motorpin3,motorpin4
+    //Motor Control - Motor A: frontLeftForward,frontLeftBackward & Motor B: frontRightForward,frontRightBackward
 
     //This code  will turn Motor A clockwise for 2 sec.
-//    digitalWrite(motorPin1, HIGH);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, HIGH);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000); 
 //    //This code will turn Motor A counter-clockwise for 2 sec.
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, HIGH);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, HIGH);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000);
 //    
 //    //This code will turn Motor B clockwise for 2 sec.
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, HIGH);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, HIGH);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000); 
 //    //This code will turn Motor B counter-clockwise for 2 sec.
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, HIGH);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, HIGH);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000);
 //
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, HIGH);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, HIGH);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000);
 //
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, HIGH);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, HIGH);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000);
 //
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, HIGH);
-//    digitalWrite(motorPin8, LOW);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, HIGH);
+//    digitalWrite(backRightBackward, LOW);
 //    delay(2000);
 //
-//    digitalWrite(motorPin1, LOW);
-//    digitalWrite(motorPin2, LOW);
-//    digitalWrite(motorPin3, LOW);
-//    digitalWrite(motorPin4, LOW);
-//    digitalWrite(motorPin5, LOW);
-//    digitalWrite(motorPin6, LOW);
-//    digitalWrite(motorPin7, LOW);
-//    digitalWrite(motorPin8, HIGH);
+//    digitalWrite(frontLeftForward, LOW);
+//    digitalWrite(frontLeftBackward, LOW);
+//    digitalWrite(frontRightForward, LOW);
+//    digitalWrite(frontRightBackward, LOW);
+//    digitalWrite(backLeftForward, LOW);
+//    digitalWrite(backLeftBackward, LOW);
+//    digitalWrite(backRightForward, LOW);
+//    digitalWrite(backRightBackward, HIGH);
 //    delay(2000);
     
     //And this code will stop motors
-    digitalWrite(motorPin1, LOW);
-    digitalWrite(motorPin2, LOW);
-    digitalWrite(motorPin3, LOW);
-    digitalWrite(motorPin4, LOW);
-    digitalWrite(motorPin5, LOW);
-    digitalWrite(motorPin6, LOW);
-    digitalWrite(motorPin7, LOW);
-    digitalWrite(motorPin8, LOW);
+    digitalWrite(frontLeftForward, LOW);
+    digitalWrite(frontLeftBackward, LOW);
+    digitalWrite(frontRightForward, LOW);
+    digitalWrite(frontRightBackward, LOW);
+    digitalWrite(backLeftForward, LOW);
+    digitalWrite(backLeftBackward, LOW);
+    digitalWrite(backRightForward, LOW);
+    digitalWrite(backRightBackward, LOW);
   
 }
 
@@ -146,34 +146,34 @@ void loop(){
   if(Serial.available() > 0) {
     char cmd = Serial.read();
     if(cmd == 'g') {
-      digitalWrite(motorPin1, HIGH);
-      digitalWrite(motorPin2, LOW);
-      digitalWrite(motorPin3, HIGH);
-      digitalWrite(motorPin4, LOW);
-      digitalWrite(motorPin5, HIGH);
-      digitalWrite(motorPin6, LOW);
-      digitalWrite(motorPin7, HIGH);
-      digitalWrite(motorPin8, LOW);
+      digitalWrite(frontLeftForward, HIGH);
+      digitalWrite(frontLeftBackward, LOW);
+      digitalWrite(frontRightForward, HIGH);
+      digitalWrite(frontRightBackward, LOW);
+      digitalWrite(backLeftForward, HIGH);
+      digitalWrite(backLeftBackward, LOW);
+      digitalWrite(backRightForward, HIGH);
+      digitalWrite(backRightBackward, LOW);
       delay(5000);
 
-      digitalWrite(motorPin1, HIGH);
-      digitalWrite(motorPin2, LOW);
-      digitalWrite(motorPin3, LOW);
-      digitalWrite(motorPin4, HIGH);
-      digitalWrite(motorPin5, HIGH);
-      digitalWrite(motorPin6, LOW);
-      digitalWrite(motorPin7, LOW);
-      digitalWrite(motorPin8, HIGH);
+      digitalWrite(frontLeftForward, HIGH);
+      digitalWrite(frontLeftBackward, LOW);
+      digitalWrite(frontRightForward, LOW);
+      digitalWrite(frontRightBackward, HIGH);
+      digitalWrite(backLeftForward, HIGH);
+      digitalWrite(backLeftBackward, LOW);
+      digitalWrite(backRightForward, LOW);
+      digitalWrite(backRightBackward, HIGH);
       delay(5000);
 
-      digitalWrite(motorPin1, LOW);
-      digitalWrite(motorPin2, LOW);
-      digitalWrite(motorPin3, LOW);
-      digitalWrite(motorPin4, LOW);
-      digitalWrite(motorPin5, LOW);
-      digitalWrite(motorPin6, LOW);
-      digitalWrite(motorPin7, LOW);
-      digitalWrite(motorPin8, LOW);
+      digitalWrite(frontLeftForward, LOW);
+      digitalWrite(frontLeftBackward, LOW);
+      digitalWrite(frontRightForward, LOW);
+      digitalWrite(frontRightBackward, LOW);
+      digitalWrite(backLeftForward, LOW);
+      digitalWrite(backLeftBackward, LOW);
+      digitalWrite(backRightForward, LOW);
+      digitalWrite(backRightBackward, LOW);
     }
   }
 }
