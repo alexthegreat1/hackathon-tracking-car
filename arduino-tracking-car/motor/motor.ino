@@ -45,106 +45,27 @@ void setup(){
     analogWrite(enableBackLeft, 255);
     analogWrite(enableBackRight, 255);
   
-    //Motor Control - Motor A: frontLeftForward,frontLeftBackward & Motor B: frontRightForward,frontRightBackward
-
-    //This code  will turn Motor A clockwise for 2 sec.
-//    digitalWrite(frontLeftForward, HIGH);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000); 
-//    //This code will turn Motor A counter-clockwise for 2 sec.
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, HIGH);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000);
-//    
-//    //This code will turn Motor B clockwise for 2 sec.
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, HIGH);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000); 
-//    //This code will turn Motor B counter-clockwise for 2 sec.
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, HIGH);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000);
-//
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, HIGH);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000);
-//
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, HIGH);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000);
-//
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, HIGH);
-//    digitalWrite(backRightBackward, LOW);
-//    delay(2000);
-//
-//    digitalWrite(frontLeftForward, LOW);
-//    digitalWrite(frontLeftBackward, LOW);
-//    digitalWrite(frontRightForward, LOW);
-//    digitalWrite(frontRightBackward, LOW);
-//    digitalWrite(backLeftForward, LOW);
-//    digitalWrite(backLeftBackward, LOW);
-//    digitalWrite(backRightForward, LOW);
-//    digitalWrite(backRightBackward, HIGH);
-//    delay(2000);
-    
-    //And this code will stop motors
-    digitalWrite(frontLeftForward, LOW);
-    digitalWrite(frontLeftBackward, LOW);
-    digitalWrite(frontRightForward, LOW);
-    digitalWrite(frontRightBackward, LOW);
-    digitalWrite(backLeftForward, LOW);
-    digitalWrite(backLeftBackward, LOW);
-    digitalWrite(backRightForward, LOW);
-    digitalWrite(backRightBackward, LOW);
-  
 }
 
 void loop(){
   
   if(Serial.available() > 0) {
+    
     char cmd = Serial.read();
+
+    switch (cmd) {
+      case 'w':
+        break;
+      case 'd': // turn right in place
+        turnRightUntilAligned();
+        break;
+      case 's':
+        stopMoving();
+        break;
+      default:
+        break;
+    }
+    
     if(cmd == 'g') {
       digitalWrite(frontLeftForward, HIGH);
       digitalWrite(frontLeftBackward, LOW);
@@ -176,4 +97,33 @@ void loop(){
       digitalWrite(backRightBackward, LOW);
     }
   }
+}
+
+// complete this. gyro, ultrasonic, etc.
+void turnRightUntilAligned() {
+  turnRightInPlace();
+  delay(3000);
+  stopMoving();
+}
+
+void turnRightInPlace() {
+  digitalWrite(frontLeftForward, HIGH);
+  digitalWrite(frontLeftBackward, LOW);
+  digitalWrite(frontRightForward, LOW);
+  digitalWrite(frontRightBackward, HIGH);
+  digitalWrite(backLeftForward, HIGH);
+  digitalWrite(backLeftBackward, LOW);
+  digitalWrite(backRightForward, LOW);
+  digitalWrite(backRightBackward, HIGH);
+}
+
+void stopMoving() {
+  digitalWrite(frontLeftForward, LOW);
+  digitalWrite(frontLeftBackward, LOW);
+  digitalWrite(frontRightForward, LOW);
+  digitalWrite(frontRightBackward, LOW);
+  digitalWrite(backLeftForward, LOW);
+  digitalWrite(backLeftBackward, LOW);
+  digitalWrite(backRightForward, LOW);
+  digitalWrite(backRightBackward, LOW);
 }

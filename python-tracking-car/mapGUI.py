@@ -40,7 +40,7 @@ points_list = []
 car_queue = []
 car_history = []
 
-carDirection = 0 # 0 = right, 1 = down, 2 = left, 3 = up
+# carDirection = 0 # 0 = right, 1 = down, 2 = left, 3 = up
 
 # Square arena 1.5m x 1.5m, or 1050 x 1050
 class Arena:
@@ -72,23 +72,32 @@ class Car:
             canvas.delete(car_queue[0])
             car_queue.pop()
         
+        # print("Hi" + str(self.carDirection))
+        
         if self.carDirection == 0:
             x = canvas.create_rectangle(self.x - CAR_HEIGHT / 2, self.y - CAR_WIDTH / 2, self.x + CAR_HEIGHT / 2, self.y + CAR_WIDTH / 2, outline = "blue")
             car_queue.append(x)
             car_history.append(CarHistoryPoint(self.x, self.y, canvas))
             
             canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
-            print(car_history[len(car_history) - 1].x)
-            print(car_history[len(car_history) - 1].y)
-            print(self.x)
-            print(self.y)
+            # print(car_history[len(car_history) - 1].x)
+            # print(car_history[len(car_history) - 1].y)
+            # print(self.x)
+            # print(self.y)
+        if self.carDirection == 1:
+            x = canvas.create_rectangle(self.x - CAR_WIDTH / 2, self.y - CAR_HEIGHT / 2, self.x + CAR_WIDTH / 2, self.y + CAR_HEIGHT / 2, outline = "blue")
+            car_queue.append(x)
+            car_history.append(CarHistoryPoint(self.x, self.y, canvas))
+            
+            canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
     
     def changePos(self, canvas):
+        # print("Ho" + str(self.carDirection))
         # if car turns, change how it maps?
         if self.carDirection == 0:
             frontDistanceMode = getFrontDistanceMode()
             # self.x = ARENA_SIDE_LENGTH - getFrontDistanceMode()
-            print(frontDistanceMode)
+            print("Front Distance: " + str(frontDistanceMode))
 
             try:
                 self.x = ARENA_SIDE_LENGTH - (frontDistanceMode * 7)
@@ -96,6 +105,26 @@ class Car:
                 pass
             self.y = ARENA_Y_START + (2 * 7) + WHEEL_WIDTH + (CAR_WIDTH / 2)
             self.draw(canvas)
+        
+        if self.carDirection == 1:
+            frontDistanceMode = getFrontDistanceMode()
+            print("Front Distance: " + str(frontDistanceMode))
+            try:
+                while frontDistanceMode < 5:
+                    frontDistanceMode = getFrontDistanceMode()
+                self.y = ARENA_SIDE_LENGTH - (frontDistanceMode * 7)
+            except Exception:
+                pass
+            self.draw(canvas)
+            # self.x should stay what it is from when the car was moving to the right?
+
+    def startMoving():
+        # w: start moving
+        SerialPort.write(bytes('w','utf-8'))
+    
+    def turnRightUntilAligned():
+        # d: turn right in place
+        SerialPort.write(bytes('d','utf-8'))
 
 class CarHistoryPoint:
     def __init__(self, x, y, canvas):
@@ -181,14 +210,34 @@ def getRightDistance():
 		decodedData = (IncomingData).decode('utf-8')
 		return decodedData
 
-def getTopLeftPoints(canvas):
-    topLeftPoints = []
+# def getTopLeftPoints(canvas):
+#     topLeftPoints = []
 
 def update(car, canvas, window):
+    
+    # global carDirection
+    
+    # print(getFrontDistanceMode())
+    if getFrontDistanceMode() < 5 and car.carDirection != 3:
+        # print(car.x)
+        # print(ARENA_SIDE_LENGTH - car.x)
+        if ARENA_SIDE_LENGTH - car.x < CAR_HEIGHT / 2:
+            car.carDirection = 1
+        #TODO: check if works
+        elif ARENA_SIDE_LENGTH - car.y < CAR_HEIGHT / 2:
+            car.carDirection = 2
+        #TODO: check if works
+        elif car.x < CAR_HEIGHT / 2:
+            car.carDirection = 3
+        
+        car.turnRightUntilAligned()
+    
+    print(car.carDirection)
+
     car.changePos(canvas)
     
-    frontDistanceMode = getFrontDistanceMode()
-    print(frontDistanceMode)
+    # frontDistanceMode = getFrontDistanceMode()
+    # print(frontDistanceMode)
 
     window.after(100, update, car, canvas, window)
 
@@ -205,6 +254,11 @@ def main():
     car = Car(canvas)
 
     test(canvas)
+
+    input = input('> ')
+
+    if input == "start":
+        car.startMoving();
 
     window.after(100, update, car, canvas, window)
 
