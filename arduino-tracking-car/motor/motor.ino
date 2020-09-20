@@ -55,6 +55,7 @@ void loop(){
 
     switch (cmd) {
       case 'w':
+        startMoving();
         break;
       case 'd': // turn right in place
         turnRightUntilAligned();
@@ -99,6 +100,28 @@ void loop(){
   }
 }
 
+void startMoving() {
+  digitalWrite(frontLeftForward, HIGH);
+  digitalWrite(frontLeftBackward, LOW);
+  digitalWrite(frontRightForward, HIGH);
+  digitalWrite(frontRightBackward, LOW);
+  digitalWrite(backLeftForward, HIGH);
+  digitalWrite(backLeftBackward, LOW);
+  digitalWrite(backRightForward, HIGH);
+  digitalWrite(backRightBackward, LOW);
+}
+
+void stopMoving() {
+  digitalWrite(frontLeftForward, LOW);
+  digitalWrite(frontLeftBackward, LOW);
+  digitalWrite(frontRightForward, LOW);
+  digitalWrite(frontRightBackward, LOW);
+  digitalWrite(backLeftForward, LOW);
+  digitalWrite(backLeftBackward, LOW);
+  digitalWrite(backRightForward, LOW);
+  digitalWrite(backRightBackward, LOW);
+}
+
 // complete this. gyro, ultrasonic, etc.
 void turnRightUntilAligned() {
   turnRightInPlace();
@@ -115,15 +138,4 @@ void turnRightInPlace() {
   digitalWrite(backLeftBackward, LOW);
   digitalWrite(backRightForward, LOW);
   digitalWrite(backRightBackward, HIGH);
-}
-
-void stopMoving() {
-  digitalWrite(frontLeftForward, LOW);
-  digitalWrite(frontLeftBackward, LOW);
-  digitalWrite(frontRightForward, LOW);
-  digitalWrite(frontRightBackward, LOW);
-  digitalWrite(backLeftForward, LOW);
-  digitalWrite(backLeftBackward, LOW);
-  digitalWrite(backRightForward, LOW);
-  digitalWrite(backRightBackward, LOW);
 }
