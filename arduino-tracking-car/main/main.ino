@@ -1,10 +1,14 @@
-const int trigPin = 2;
-const int echoPin = 3;
+const int frontTrigPin = 2;
+const int frontEchoPin = 3;
+const int rightTrigPin = 4;
+const int rightEchoPin = 5;
 long duration;
 
 void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+  pinMode(frontTrigPin, OUTPUT);
+  pinMode(frontEchoPin, INPUT);
+  pinMode(rightTrigPin, OUTPUT);
+  pinMode(rightEchoPin, INPUT);
   Serial.begin(9600);
 }
 
@@ -12,8 +16,12 @@ void loop() {
   
   if(Serial.available() > 0) {
     char cmd = Serial.read();
-    if(cmd == 'd') {
-      Serial.println(getDist());
+    if(cmd == 'f') {
+      Serial.println(getFrontDist());
+    }
+
+    if(cmd == 'r') {
+      Serial.println(getRightDist());
     }
     
     if(cmd == 's') {
@@ -25,16 +33,17 @@ void loop() {
   delayMicroseconds(2);
 }
 
-double getDist() {
-//  digitalWrite(trigPin, LOW);
+double getFrontDist() {
+  return getDist(frontTrigPin, frontEchoPin);
 //  delayMicroseconds(2);
-//  digitalWrite(trigPin, HIGH);
-//  delayMicroseconds(10);
-//  digitalWrite(trigPin, LOW);
-//  duration = pulseIn(echoPin, HIGH);
-//  double distance = (double)duration * 100 * 345 / 2 / 1000000;
+}
+
+double getRightDist() {
+  return getDist(rightTrigPin, rightEchoPin);
 //  delayMicroseconds(2);
-//  return distance;
+}
+
+double getDist(const int trigPin, const int echoPin) {
 // Send a short low pulse to ensure a clean high one.
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -46,8 +55,6 @@ double getDist() {
   const long duration = pulseIn(echoPin, HIGH);
   // Calculate and print the distance to the target.
   const double distance = microsecondsToDistance(duration);
-//  Serial.print("Distance: ");
-//  Serial.println(distance);
   return distance;
 }
 
