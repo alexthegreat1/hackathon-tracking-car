@@ -1,4 +1,9 @@
 import tkinter as tk
+import serial
+import time
+import sys
+import signal
+import statistics
 
 # max width and height that would accurately fit on my laptop screen
 # 150 * 8 = 1200
@@ -16,14 +21,26 @@ ARENA_Y_START = HEIGHT - ARENA_SIDE_LENGTH
 ARENA_X_END = ARENA_X_START + ARENA_SIDE_LENGTH
 ARENA_Y_END = ARENA_Y_START + ARENA_SIDE_LENGTH
 
-# from wheel to wheel, in cm
-CAR_WIDTH = 25
-CAR_HEIGHT = 24
+# from wheel to wheel, in cm is 25cm
+# 25cm * 7
+# CAR_WIDTH = 175
+# 17cm * 7
+CAR_WIDTH = 119
+# 24cm * 7
+CAR_HEIGHT = 168
+# single wheel width, 4cm
+WHEEL_WIDTH = 28
+
+COM = "/dev/cu.HC-05-DevB"
+# COM = "/dev/cu.usbmodem141401"
+BAUD = 9600
+SerialPort = serial.Serial(COM,BAUD,timeout=1)
 
 points_list = []
 car_queue = []
+car_history = []
 
-# carDirection = 0 # 0 = right, 1 = down, 2 = left, 3 = up
+carDirection = 0 # 0 = right, 1 = down, 2 = left, 3 = up
 
 # Square arena 1.5m x 1.5m, or 1050 x 1050
 class Arena:
@@ -37,25 +54,58 @@ class Arena:
     def draw(self, canvas):
         x = canvas.create_rectangle(self.x1, self.y1, self.x2, self.y2)
 
-# class Car:
-#     # car starts at the top left of the arena facing to the right, maybe about 1-2 cm away from the walls?
-#     def __init__(self, canvas):
-#         # coords are for center of the car
-#         self.x = ARENA_X_START + (2 * 7) + 
-#         # x 7 bc everything is multiplied by 7, so 2cm
-#         # self.x1 = ARENA_X_START + 2 * 7
-#         # self.y1 = ARENA_Y_START + 2 * 7
-#         # self.x2 = self.x1 + CAR_HEIGHT
-#         self.carDirection = 0 # 0 = right, 1 = down, 2 = left, 3 = up
-#         self.draw(canvas)
+class Car:
+    # car starts at the top left of the arena facing to the right, maybe about 1-2 cm away from the walls?
+    def __init__(self, canvas):
+        # coords are for center of the car
+        self.x = ARENA_X_START + (2 * 7) + (CAR_HEIGHT / 2)
+        self.y = ARENA_Y_START + (2 * 7) + WHEEL_WIDTH + (CAR_WIDTH / 2)
+        # x 7 bc everything is multiplied by 7, so 2cm
+        # self.x1 = ARENA_X_START + 2 * 7
+        # self.y1 = ARENA_Y_START + 2 * 7
+        # self.x2 = self.x1 + CAR_HEIGHT
+        self.carDirection = 0 # 0 = right, 1 = down, 2 = left, 3 = up
+        self.draw(canvas)
     
-#     def draw(self, canvas):
-#         if len(car_queue) != 0:
-#             canvas.delete(car_queue[0])
-#             car_queue.pop()
+    def draw(self, canvas):
+        if len(car_queue) != 0:
+            canvas.delete(car_queue[0])
+            car_queue.pop()
         
-#         if self.carDirection == 0:
+        if self.carDirection == 0:
+            x = canvas.create_rectangle(self.x - CAR_HEIGHT / 2, self.y - CAR_WIDTH / 2, self.x + CAR_HEIGHT / 2, self.y + CAR_WIDTH / 2, outline = "blue")
+            car_queue.append(x)
+            car_history.append(CarHistoryPoint(self.x, self.y, canvas))
+            
+            canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
+            print(car_history[len(car_history) - 1].x)
+            print(car_history[len(car_history) - 1].y)
+            print(self.x)
+            print(self.y)
+    
+    def changePos(self, canvas):
+        # if car turns, change how it maps?
+        if self.carDirection == 0:
+            frontDistanceMode = getFrontDistanceMode()
+            # self.x = ARENA_SIDE_LENGTH - getFrontDistanceMode()
+            print(frontDistanceMode)
 
+            try:
+                self.x = ARENA_SIDE_LENGTH - (frontDistanceMode * 7)
+            except Exception:
+                pass
+            self.y = ARENA_Y_START + (2 * 7) + WHEEL_WIDTH + (CAR_WIDTH / 2)
+            self.draw(canvas)
+
+class CarHistoryPoint:
+    def __init__(self, x, y, canvas):
+        self.x = x
+        self.y = y
+        self.draw(canvas)
+    
+    def draw(self, canvas):
+        size = 3
+        x = canvas.create_oval(self.x - size, self.y - size, self.x + size, self.y + size, fill="blue")
 
 class Point:
     def __init__(self, x, y, canvas):
@@ -100,8 +150,47 @@ def test(canvas):
         # keep going through this for loop until the topleft and topright points don't change
         #after drawing out that obstacle, pop out all the points used for it. Then you can do the for loop again for the other obstacles
 
+def signal_handler(signal, frame):
+    print("closing program")
+    SerialPort.close()
+    sys.exit(0)
+
+def getFrontDistanceMode():
+    front_distances = []
+    for i in range(20):
+        front_distances.append(getFrontDistance())
+    
+    try:
+        return float(statistics.mode(front_distances))
+    except Exception:
+        return None  
+
+def getFrontDistance():
+	# f: front distance
+	SerialPort.write(bytes('f','utf-8'))
+	IncomingData = SerialPort.readline()
+	if(IncomingData):
+		decodedData = (IncomingData).decode('utf-8')
+		return decodedData
+
+def getRightDistance():
+	# r: right distance
+	SerialPort.write(bytes('r','utf-8'))
+	IncomingData = SerialPort.readline()
+	if(IncomingData):
+		decodedData = (IncomingData).decode('utf-8')
+		return decodedData
+
 def getTopLeftPoints(canvas):
     topLeftPoints = []
+
+def update(car, canvas, window):
+    car.changePos(canvas)
+    
+    frontDistanceMode = getFrontDistanceMode()
+    print(frontDistanceMode)
+
+    window.after(100, update, car, canvas, window)
 
 def main():
     window = tk.Tk()
@@ -113,13 +202,19 @@ def main():
     # point = Point(100, 100, canvas)
     arena = Arena(canvas)
 
+    car = Car(canvas)
+
     test(canvas)
+
+    window.after(100, update, car, canvas, window)
 
     window.mainloop()
 
 main()
 
 # Left and topmost point of all the points will be x1 and y1 of rectangle. And the opposite for the opposite corner. Draw the shape on top of those plotted points
+
+# once the front distance reaches < 5, turn
 
 # TODO: must also track car coords and update it as it moves. And take into account the car dimensions so you know how far the obstacles are from the sensors
 
