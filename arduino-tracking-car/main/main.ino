@@ -125,7 +125,8 @@ void stopMoving() {
 void turnRightUntilAligned() {
   turnRightInPlace();
   // 2000 might be good for 255 motors, 4000 is untested for 200 motors
-  delay(2500);
+  delay(2700);
+//  delay(3000);
   stopMoving();
 }
 

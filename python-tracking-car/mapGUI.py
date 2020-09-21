@@ -85,6 +85,8 @@ class Car:
             car_history.append(CarHistoryPoint(self.x, self.y, canvas))
             
             canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
+
+            # car_history.append((self.x, self.y))
             # print(car_history[len(car_history) - 1].x)
             # print(car_history[len(car_history) - 1].y)
             # print(self.x)
@@ -98,6 +100,7 @@ class Car:
             car_history.append(CarHistoryPoint(self.x, self.y, canvas))
             
             canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
+            # car_history.append((self.x, self.y))
         
         if self.carDirection == 2:
             x = canvas.create_rectangle(self.x - CAR_HEIGHT / 2, self.y - CAR_WIDTH / 2, self.x + CAR_HEIGHT / 2, self.y + CAR_WIDTH / 2, outline = "blue")
@@ -105,6 +108,7 @@ class Car:
             car_history.append(CarHistoryPoint(self.x, self.y, canvas))
             
             canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
+            # car_history.append((self.x, self.y))
         
         if self.carDirection == 3:
             x = canvas.create_rectangle(self.x - CAR_WIDTH / 2, self.y - CAR_HEIGHT / 2, self.x + CAR_WIDTH / 2, self.y + CAR_HEIGHT / 2, outline = "blue")
@@ -112,6 +116,7 @@ class Car:
             car_history.append(CarHistoryPoint(self.x, self.y, canvas))
             
             canvas.create_line(car_history[len(car_history) - 2].x, car_history[len(car_history) - 2].y, self.x, self.y, fill = "blue")
+            # car_history.append((self.x, self.y))
 
     def changePos(self, canvas):
         # print("Ho" + str(self.carDirection))
@@ -121,9 +126,9 @@ class Car:
             rightDistanceMedian = getRightDistanceMedian()
             leftDistanceMedian = getLeftDistanceMedian()
             # self.x = ARENA_SIDE_LENGTH - getFrontDistanceMode()
-            print("Front Distance: " + str(frontDistanceMedian))
-            print("Right Distance: " + str(rightDistanceMedian))
-            print("Left Distance: " + str(leftDistanceMedian))
+            # print("Front Distance: " + str(frontDistanceMedian))
+            # print("Right Distance: " + str(rightDistanceMedian))
+            # print("Left Distance: " + str(leftDistanceMedian))
 
             # try:
             #TODO: check if adding half the car height makes map more accurate
@@ -180,12 +185,12 @@ class Car:
             # self.x should stay what it is from when the car was moving to the right?
         #TODO add other conditions
         if self.carDirection == 2:
-            frontDistanceMedian = getFrontDistanceMedian()
-            rightDistanceMedian = getRightDistanceMedian()
-            leftDistanceMedian = getLeftDistanceMedian()
-            print("Front Distance: " + str(frontDistanceMedian))
-            print("Right Distance: " + str(rightDistanceMedian))
-            print("Left Distance: " + str(leftDistanceMedian))
+            # frontDistanceMedian = getFrontDistanceMedian()
+            # rightDistanceMedian = getRightDistanceMedian()
+            # leftDistanceMedian = getLeftDistanceMedian()
+            # print("Front Distance: " + str(frontDistanceMedian))
+            # print("Right Distance: " + str(rightDistanceMedian))
+            # print("Left Distance: " + str(leftDistanceMedian))
 
             self.x = ARENA_X_START + (getFrontDistanceMedian() * 7) + (CAR_HEIGHT / 2)
             
@@ -193,7 +198,7 @@ class Car:
             #     self.y = ARENA_Y_START + (getRightDistanceMedian() * 7) + (CAR_WIDTH / 2)
             # else:
             #     self.y = self.y
-            self.y = ARENA_Y_END - getLeftDistanceMedian() - CAR_WIDTH / 2
+            self.y = ARENA_SIDE_LENGTH - getLeftDistanceMedian() - CAR_WIDTH / 2
             
             self.draw(canvas)
         
@@ -287,7 +292,7 @@ def signal_handler(signal, frame):
 
 def getFrontDistanceMedian():
     front_distances = []
-    for i in range(10):
+    for i in range(5):
         frontDistance = getFrontDistance()
         if frontDistance is not None:
             if float(frontDistance) < ARENA_SIDE_LENGTH:
@@ -310,7 +315,7 @@ def getFrontDistance():
 
 def getRightDistanceMedian():
     right_distances = []
-    for i in range(10):
+    for i in range(5):
         rightDistance = getRightDistance()
         if rightDistance is not None:
             if float(rightDistance) < ARENA_SIDE_LENGTH:
@@ -334,7 +339,7 @@ def getRightDistance():
 
 def getLeftDistanceMedian():
     left_distances = []
-    for i in range(10):
+    for i in range(5):
         leftDistance = getLeftDistance()
         if leftDistance is not None:
             if float(leftDistance) < ARENA_SIDE_LENGTH:
@@ -374,41 +379,9 @@ def update(car, canvas, window):
     dist = float(getFrontDistance())
     # print("FDist: " + str(dist))
     
-    if dist < MIN_THRESHOLD and car.carDirection != 3:
-        # print(car.x)
-        print(ARENA_SIDE_LENGTH - car.x)
-        print(ARENA_SIDE_LENGTH - car.x < CAR_HEIGHT)
-        print(ARENA_SIDE_LENGTH - (car.x + CAR_HEIGHT / 2) < CAR_HEIGHT)
-
-        if ARENA_SIDE_LENGTH - (car.x + CAR_HEIGHT / 2) < CAR_HEIGHT:
-            car.carDirection = 1
-            car.stopMoving()
-            car.turnRightUntilAligned()
-            car.startMoving()
-        #TODO: check if works
-        elif ARENA_SIDE_LENGTH - (car.y + CAR_HEIGHT / 2) < CAR_HEIGHT:
-            car.carDirection = 2
-            car.stopMoving()
-            car.turnRightUntilAligned()
-            car.startMoving()
-        #TODO: check if works
-        elif car.x + CAR_HEIGHT / 2 < CAR_HEIGHT:
-            car.carDirection = 3
-            car.stopMoving()
-            car.turnRightUntilAligned()
-            car.startMoving()
-            
-            # car.stopMoving()
-            # car.turnRightUntilAligned()
-    # except Exception:
-    #     pass
-    
-    print(car.carDirection)
-
-    # print("Straight: " + str(carIsGoingStraight()))
-
     if car.carDirection == 0:
-        rightDistanceMedian = getRightDistanceMedian()
+        # rightDistanceMedian = getRightDistanceMedian()
+        rightDistanceMedian = float(getRightDistance())
         # checks if returned coord is of an obstacle
         if (rightDistanceMedian * 7) + (2 * CAR_WIDTH) < ARENA_SIDE_LENGTH and carIsGoingStraight():
             points_list.append(Point(car.x, rightDistanceMedian + car.y + (CAR_WIDTH / 2), canvas))
@@ -418,6 +391,51 @@ def update(car, canvas, window):
         
         if (rightDistanceMedian * 7) + (2 * CAR_WIDTH) < ARENA_SIDE_LENGTH and carIsGoingStraight():
             points_list.append(Point(car.x - rightDistanceMedian - (CAR_WIDTH / 2), car.y, canvas))
+    
+    if dist < MIN_THRESHOLD and car.carDirection != 3:
+        # print(car.x)
+        # print(ARENA_SIDE_LENGTH - car.x)
+        # print(ARENA_SIDE_LENGTH - car.x < CAR_HEIGHT * 2)
+        # print(ARENA_SIDE_LENGTH - (car.x + CAR_HEIGHT / 2) < CAR_HEIGHT)
+
+        if car.carDirection == 0 and ARENA_SIDE_LENGTH - car.x < CAR_HEIGHT * 1.1:
+            car.stopMoving()
+            car.turnRightUntilAligned()
+            car.startMoving()
+            car.carDirection = 1
+        #TODO: check if works
+        elif car.carDirection == 1 and ARENA_SIDE_LENGTH - car.y < CAR_HEIGHT * 1.5:
+            car.carDirection = 2
+            car.stopMoving()
+            car.turnRightUntilAligned()
+            car.startMoving()
+        #TODO: check if works
+        elif car.carDirection == 2 and car.x < CAR_HEIGHT:
+            car.carDirection = 3
+            car.stopMoving()
+            car.turnRightUntilAligned()
+            car.startMoving()
+        elif car.carDirection == 3 and ARENA_SIDE_LENGTH - car.x < CAR_WIDTH:
+            car.carDirection = 4
+            car.stopMoving()
+            # car.stopMoving()
+            # car.turnRightUntilAligned()
+    # except Exception:
+    #     pass
+    
+    print(car.carDirection)
+
+    # if car.carDirection == 4:
+        
+    #     prevx = 0
+    #     prevy = 0
+    #     for x, y in car_history:
+    #         CarHistoryPoint(x, y, canvas)
+    #         canvas.create_line(prevx, prevy, x, y, fill = "blue")
+
+    # print("Straight: " + str(carIsGoingStraight()))
+
+    
     #TODO: add other conditions
 
     car.changePos(canvas)
