@@ -2,6 +2,8 @@ const int frontTrigPin = 2;
 const int frontEchoPin = 3;
 const int rightTrigPin = 4;
 const int rightEchoPin = 5;
+const int leftTrigPin = 6;
+const int leftEchoPin = 7;
 long duration;
 
 //L293D
@@ -29,6 +31,8 @@ void setup() {
   pinMode(frontEchoPin, INPUT);
   pinMode(rightTrigPin, OUTPUT);
   pinMode(rightEchoPin, INPUT);
+  pinMode(leftTrigPin, OUTPUT);
+  pinMode(leftEchoPin, INPUT);
   Serial.begin(9600);
 
   //Set pins as outputs
@@ -48,10 +52,10 @@ void setup() {
   //enable
   //this should change the speeds of the wheels
   //note: setting a speed of 200 on 1 wheel may not be the same as 200 on another wheel
-  analogWrite(enableFrontLeft, 255);
-  analogWrite(enableFrontRight, 255);
-  analogWrite(enableBackLeft, 255);
-  analogWrite(enableBackRight, 255);
+  analogWrite(enableFrontLeft, 200);
+  analogWrite(enableFrontRight, 200);
+  analogWrite(enableBackLeft, 200);
+  analogWrite(enableBackRight, 200);
 }
 
 void loop() {
@@ -67,6 +71,9 @@ void loop() {
       case 'r':
         Serial.println(getRightDist());
         break;
+      case 'l':
+        Serial.println(getLeftDist());
+        break;
       case 'w':
         startMoving();
         break;
@@ -76,11 +83,20 @@ void loop() {
       case 's':
         stopMoving();
         break;
+      case 't':
+        Serial.println(isGoingStraight());
+        break;
       default:
         break;
     }
   }
   delayMicroseconds(2);
+
+//  Serial.print("F: ");
+//  Serial.println(getFrontDist());
+//  Serial.print("R: ");
+//  Serial.println(getRightDist());
+//  delay(1000);
 }
 
 void startMoving() {
@@ -108,7 +124,8 @@ void stopMoving() {
 // complete this. gyro, ultrasonic, etc.
 void turnRightUntilAligned() {
   turnRightInPlace();
-  delay(3000);
+  // 2000 might be good for 255 motors, 4000 is untested for 200 motors
+  delay(2500);
   stopMoving();
 }
 
@@ -133,6 +150,10 @@ double getRightDist() {
 //  delayMicroseconds(2);
 }
 
+double getLeftDist() {
+  return getDist(leftTrigPin, leftEchoPin);
+}
+
 double getDist(const int trigPin, const int echoPin) {
   // Send a short low pulse to ensure a clean high one.
   digitalWrite(trigPin, LOW);
@@ -146,6 +167,20 @@ double getDist(const int trigPin, const int echoPin) {
   // Calculate and print the distance to the target.
   const double distance = microsecondsToDistance(duration);
   return distance;
+}
+
+bool isGoingStraight() {
+  if (digitalRead(frontLeftForward) == HIGH
+    && digitalRead(frontLeftBackward) == LOW
+    && digitalRead(frontRightForward) == HIGH
+    && digitalRead(frontRightBackward) == LOW
+    && digitalRead(backLeftForward) == HIGH
+    && digitalRead(backLeftBackward) == LOW
+    && digitalRead(backRightForward) == HIGH
+    && digitalRead(backRightBackward) == LOW) {
+      return true;
+    }
+  else return false;
 }
 
 const double microsecondsToDistance(const long microseconds) {
